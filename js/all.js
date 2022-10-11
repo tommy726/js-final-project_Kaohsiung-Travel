@@ -19,8 +19,9 @@ fetch('https://api.kcg.gov.tw/api/service/get/9c8e1450-e833-499c-8320-29b36b7ace
     getArea(travelData);
     showSelect(noRepeatArea);
     getListArrayData('allArea',travelData);
-    pagination(areaListArray,1);
-});
+    pagination(areaListArray,1);}
+  ).catch(error => console.error('Error:', error)
+);
 
 function getArea(){
   travelData.forEach(item => {
@@ -37,7 +38,7 @@ function getArea(){
 };
 
 function showSelect(data){
-  let str = `<option value="none">- - 請選擇行政區 - -</option>
+  let str = `<option disabled>- - 請選擇行政區 - -</option>
             <option value="allArea">全部行政區</option>`;
   for (let i = 0; i < data.length; i++) {
     str += `<option>${data[i]}</option>`
@@ -78,43 +79,37 @@ function getListArrayData(text,data){
     }else if(text == 'allArea'){
       areaListArray.push(data[i]);
       area.textContent = '全部行政區';
-    }else if(text == 'none'){
-      area.textContent = '歡迎光臨高雄，請選擇行政區';
     }
   }
 };
 
-function pagination(data, nowPage) {
+function pagination(data, nowPage){
   const dataTotal = data.length;
   const perpage = 6;
   const pageTotal = Math.ceil(dataTotal / perpage);
   let currentPage = nowPage;
-
-  if (currentPage > pageTotal) {
+  if (currentPage > pageTotal){
     currentPage = pageTotal;
   };
-
-  const minData = (currentPage * perpage) - perpage + 1 ;
-  const maxData = (currentPage * perpage) ;
+  const minData = (currentPage * perpage) - perpage + 1;
+  const maxData = (currentPage * perpage);
 
   const newData = [];
-
   data.forEach((item, index) => {
     const num = index + 1;
     if( num >= minData && num <= maxData){
       newData.push(item);
     }
   });
-
   const page ={
     pageTotal,
     currentPage,
     hasPage: currentPage > 1,
     hasNext: currentPage < pageTotal,
-  }
+  };
   displayAreaList(newData);
   pageBtn(page);
-}
+};
 
 function displayAreaList(data) {
   let str = '';
@@ -138,7 +133,7 @@ function displayAreaList(data) {
   areaList.innerHTML = str;
 }
 
-function pageBtn (page){
+function pageBtn(page){
   let str = '';
   const total = page.pageTotal;
   if(page.hasPage){
@@ -165,9 +160,9 @@ function switchPage(e){
   e.preventDefault();
   if(e.target.nodeName !== 'A') return;
   const page = e.target.dataset.page;
-  pagination(areaListArray, page);
+  pagination(areaListArray,page);
 };
-pageClass.addEventListener('click', switchPage);
+pageClass.addEventListener('click',switchPage);
 
 window.onscroll = (()=>{
   let height = document.documentElement.scrollTop
